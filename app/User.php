@@ -3,9 +3,17 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property mixed $email
+ * @property mixed $name
+ * @method Builder where()
+ * @method Builder create()
+ * @property integer $id
+ */
 class User extends Authenticatable
 {
     use Notifiable;
