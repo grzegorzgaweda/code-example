@@ -4,23 +4,23 @@ namespace Tests\Unit;
 
 use App\Services\LoginProviders\Google\GoogleCreator;
 use App\Services\LoginProviders\Google\GoogleProvider;
-use App\Services\LoginProviders\LoginService;
+use App\Services\LoginProviders\LoginProviderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class LoginServiceTest extends TestCase
+class LoginProviderServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @var LoginService
+     * @var LoginProviderService
      */
     private $loginServiceProvider;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loginServiceProvider = app(LoginService::class);
+        $this->loginServiceProvider = app(LoginProviderService::class);
     }
 
     /** @test */
