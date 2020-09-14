@@ -20,9 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/login/provider/{provider}', 'Auth\LoginProviderController@login')
-    ->name('login-provider.login')
-;
-Route::get('/login/provider/{provider}/callback', 'Auth\LoginProviderController@callback')
-    ->name('login-provider.callback')
-;
+Route::any('/login/provider/{provider}/callback', 'Auth\LoginProviderController@callback')
+    ->name('login-provider.callback');
+Route::get('/login/provider/{provider}', 'Auth\LoginProviderController@loginByProvider')
+    ->name('login-provider.login');

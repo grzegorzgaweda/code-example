@@ -6,15 +6,22 @@ namespace App\Services\LoginProviders\Google;
 
 
 use App\Services\LoginProviders\LoginProvider;
-use Laravel\Socialite\Facades\Socialite;
+use App\Services\LoginProviders\ProviderManager\ProviderManagerInterface;
 
 class GoogleProvider implements LoginProvider
 {
+    private $manager;
+
+    public function __construct(ProviderManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
 
     function login()
     {
-        return Socialite::driver('google')
-            ->with(['access_type' => 'offline'])
+        return $this->manager
+            ->setDriver('google')
+            ->setOptions(['access_type' => 'offline'])
             ->redirect();
     }
 }

@@ -3,10 +3,11 @@
 
 namespace App\Services\LoginProviders;
 
-
 use App\Services\LoginProviders\Google\GoogleCreator;
+use App\Services\LoginProviders\ProviderManager\ProviderManagerInterface;
+use App\Services\LoginProviders\ProviderManager\SocialiteManager;
 
-class LoginService
+class LoginProviderService
 {
     /**
      * @param string $providerName
@@ -22,7 +23,9 @@ class LoginService
 
     public function getLoginProviderFor(Creator $loginProvider): LoginProvider
     {
-        return $loginProvider->createLoginProvider();
+        return $loginProvider->createLoginProvider(
+            $this->getProviderManager()
+        );
     }
 
     /**
@@ -33,7 +36,7 @@ class LoginService
     private function getProviderCreatorFor(string $providerName): GoogleCreator
     {
         switch ($providerName) {
-            case 'google' :
+            case 'google':
                 $providerCreator = new GoogleCreator();
                 break;
             default:
@@ -42,4 +45,11 @@ class LoginService
         return $providerCreator;
     }
 
+    /**
+     * @return ProviderManagerInterface
+     */
+    public function getProviderManager(): ProviderManagerInterface
+    {
+        return new SocialiteManager();
+    }
 }

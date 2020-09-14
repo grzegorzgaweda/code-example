@@ -2,41 +2,59 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\UserNotFoundException;
 use App\Http\Controllers\Controller;
-use App\Services\LoginProviders\GoogleCreator;
-use App\Services\LoginProviders\LoginService;
-use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
+use App\Services\AuthService;
+use App\Services\LoginProviders\LoginProviderService;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginProviderController extends Controller
 {
-    /**
-     * @var LoginService
-     */
-    private $loginService;
+    use AuthenticatesUsers;
 
-    public function __construct(LoginService $loginService)
+    /**
+     * @var LoginProviderService
+     */
+    private $loginProviderService;
+    /**
+     * @var AuthService
+     */
+    private $authService;
+
+    public function __construct(LoginProviderService $loginProviderService, AuthService $authService)
     {
-        $this->loginService = $loginService;
+        $this->loginProviderService = $loginProviderService;
+        $this->authService = $authService;
     }
 
     /**
-     * @param $providerName
+     * @param string $providerName
      * @return mixed
      * @throws \Exception
      */
-    public function login($providerName)
+    public function loginByProvider(string $providerName)
     {
-        $provider = $this->loginService->loginBy($providerName);
+        $provider = $this->loginProviderService->loginBy($providerName);
 
         return $provider->login();
     }
 
     public function callback($providerName)
     {
-        $user = Socialite::driver($providerName)->user();
+        try {
+            $user = $this->loginProviderService->getProviderManager()->setDriver($providerName)->getUser();
+        } catch (\Exception $exception) {
+            return redirect()->route('login-provider.login', ['provider' => $providerName]);
+        }
 
-        dd($user);
+        try {
+            $this->authService->loginUser($user);
+            $this->authService->registerUser($user);
+        } catch (UserNotFoundException $exception) {
+            $this->authService->loginUser($user);
+        }
+
+        return redirect()->route('home');
     }
 
 }
