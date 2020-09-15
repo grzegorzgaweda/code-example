@@ -56,5 +56,4 @@ class LoginProviderController extends Controller
 
         return redirect()->route('home');
     }
-
 }

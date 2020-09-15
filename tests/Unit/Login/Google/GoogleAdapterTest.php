@@ -3,7 +3,6 @@
 
 namespace Tests\Unit\Login;
 
-
 use App\Services\LoginProviders\Google\GoogleAdapter;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

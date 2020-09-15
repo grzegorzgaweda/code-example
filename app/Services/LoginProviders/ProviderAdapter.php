@@ -3,7 +3,6 @@
 
 namespace App\Services\LoginProviders;
 
-
 use App\User;
 
 abstract class ProviderAdapter
@@ -15,5 +14,5 @@ abstract class ProviderAdapter
         $this->data = $data;
     }
 
-    abstract function getUser(): User;
+    abstract public function getUser(): User;
 }

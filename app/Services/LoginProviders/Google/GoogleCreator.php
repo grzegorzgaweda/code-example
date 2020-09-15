@@ -3,8 +3,6 @@
 
 namespace App\Services\LoginProviders\Google;
 
-
-
 use App\Services\LoginProviders\Creator;
 use App\Services\LoginProviders\LoginProvider;
 use App\Services\LoginProviders\ProviderManager\ProviderManagerInterface;

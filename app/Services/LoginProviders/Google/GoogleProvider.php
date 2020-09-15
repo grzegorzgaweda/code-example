@@ -3,8 +3,6 @@
 
 namespace App\Services\LoginProviders\Google;
 
-
-
 use App\Services\LoginProviders\LoginProvider;
 use App\Services\LoginProviders\ProviderManager\ProviderManagerInterface;
 
@@ -17,7 +15,7 @@ class GoogleProvider implements LoginProvider
         $this->manager = $manager;
     }
 
-    function login()
+    public function login()
     {
         return $this->manager
             ->setDriver('google')

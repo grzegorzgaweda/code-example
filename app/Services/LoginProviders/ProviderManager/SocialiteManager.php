@@ -3,7 +3,6 @@
 
 namespace App\Services\LoginProviders\ProviderManager;
 
-
 use App\User;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
