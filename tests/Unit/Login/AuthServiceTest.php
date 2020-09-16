@@ -4,10 +4,13 @@ namespace Tests\Unit\Login;
 
 use App\Services\AuthService;
 use App\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AuthServiceTest extends TestCase
 {
+    use RefreshDatabase;
+
     private $authService;
 
     protected function setUp(): void
