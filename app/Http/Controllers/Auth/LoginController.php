@@ -18,6 +18,12 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
+    public function showLoginForm()
+    {
+        $providers = ['google' => 'Google', 'github' => 'GitHub'];
+
+        return view('auth.login', compact('providers'));
+    }
 
     use AuthenticatesUsers;
 
