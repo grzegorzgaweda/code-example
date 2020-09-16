@@ -34,9 +34,13 @@ class LoginProviderController extends Controller
      */
     public function loginByProvider(string $providerName)
     {
-        $provider = $this->loginProviderService->loginBy($providerName);
+        try {
+            $provider = $this->loginProviderService->loginBy($providerName);
 
-        return $provider->login();
+            return $provider->login();
+        } catch (\Exception $exception) {
+            return redirect()->route('login')->withErrors(['error' => 'Invalid provider']);
+        }
     }
 
     public function callback($providerName)
