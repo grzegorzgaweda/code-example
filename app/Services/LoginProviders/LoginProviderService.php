@@ -3,6 +3,7 @@
 
 namespace App\Services\LoginProviders;
 
+use App\Exceptions\InvalidLoginProviderException;
 use App\Services\LoginProviders\Google\GoogleCreator;
 use App\Services\LoginProviders\ProviderManager\ProviderManagerInterface;
 use App\Services\LoginProviders\ProviderManager\SocialiteManager;
@@ -40,7 +41,7 @@ class LoginProviderService
                 $providerCreator = new GoogleCreator();
                 break;
             default:
-                throw new \Exception('Unsupported Provider');
+                throw new InvalidLoginProviderException('Unsupported Provider');
         }
         return $providerCreator;
     }

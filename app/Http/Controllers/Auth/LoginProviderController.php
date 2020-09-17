@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\InvalidLoginProviderException;
 use App\Exceptions\UserNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Services\AuthService;
 use App\Services\LoginProviders\LoginProviderService;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginProviderController extends Controller
@@ -46,16 +48,19 @@ class LoginProviderController extends Controller
     public function callback($providerName)
     {
         try {
-            $user = $this->loginProviderService->getProviderManager()->setDriver($providerName)->getUser();
-        } catch (\Exception $exception) {
-            return redirect()->route('login-provider.login', ['provider' => $providerName]);
-        }
 
-        try {
+            $user = $this->loginProviderService->getProviderManager()->setDriver($providerName)->getUser();
             $this->authService->loginUser($user);
+
+        } catch (InvalidLoginProviderException $exception) {
+
+            return redirect()->route('login-provider.login', ['provider' => $providerName]);
+
+        } catch (\Exception | UserNotFoundException $exception) {
+
             $this->authService->registerUser($user);
-        } catch (UserNotFoundException $exception) {
             $this->authService->loginUser($user);
+
         }
 
         return redirect()->route('home');

@@ -29,7 +29,8 @@ class AuthService
      */
     public function loginUser(User $user)
     {
-        Auth::login($user);
+        $user = $this->userRepository->findByEmail($user->email);
+        Auth::guard()->login($user);
     }
 
     public function registerUser(User $user)
