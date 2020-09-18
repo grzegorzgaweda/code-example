@@ -49,12 +49,17 @@ class LoginProviderController extends Controller
     {
         try {
 
-            $user = $this->loginProviderService->getProviderManager()->setDriver($providerName)->getUser();
-            $this->authService->loginUser($user);
+            $user = $this->loginProviderService->getProviderManager($providerName)->setDriver($providerName)->getUser();
 
         } catch (InvalidLoginProviderException $exception) {
 
             return redirect()->route('login-provider.login', ['provider' => $providerName]);
+
+        }
+
+        try {
+
+            $this->authService->loginUser($user);
 
         } catch (\Exception | UserNotFoundException $exception) {
 

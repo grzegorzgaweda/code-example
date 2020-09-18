@@ -4,6 +4,7 @@
 namespace App\Services\LoginProviders;
 
 use App\Exceptions\InvalidLoginProviderException;
+use App\Services\LoginProviders\Github\GithubCreator;
 use App\Services\LoginProviders\Google\GoogleCreator;
 use App\Services\LoginProviders\ProviderManager\ProviderManagerInterface;
 use App\Services\LoginProviders\ProviderManager\SocialiteManager;
@@ -15,7 +16,7 @@ class LoginProviderService
      * @return LoginProvider
      * @throws \Exception
      */
-    public function loginBy(string $providerName) : LoginProvider
+    public function loginBy(string $providerName): LoginProvider
     {
         $providerCreator = $this->getProviderCreatorFor($providerName);
 
@@ -25,7 +26,7 @@ class LoginProviderService
     public function getLoginProviderFor(Creator $loginProvider): LoginProvider
     {
         return $loginProvider->createLoginProvider(
-            $this->getProviderManager()
+            $this->getProviderManager($loginProvider->getProviderName())
         );
     }
 
@@ -34,11 +35,14 @@ class LoginProviderService
      * @return GoogleCreator
      * @throws \Exception
      */
-    private function getProviderCreatorFor(string $providerName): GoogleCreator
+    private function getProviderCreatorFor(string $providerName): Creator
     {
         switch ($providerName) {
             case 'google':
                 $providerCreator = new GoogleCreator();
+                break;
+            case 'github':
+                $providerCreator = new GithubCreator();
                 break;
             default:
                 throw new InvalidLoginProviderException('Unsupported Provider');
@@ -47,10 +51,17 @@ class LoginProviderService
     }
 
     /**
+     * @param string $providerName
      * @return ProviderManagerInterface
+     * @throws \Exception
      */
-    public function getProviderManager(): ProviderManagerInterface
+    public function getProviderManager(string $providerName): ProviderManagerInterface
     {
-        return new SocialiteManager();
+        $manager = new SocialiteManager();
+        $creator = $this->getProviderCreatorFor($providerName);
+        $provider = $creator->createLoginProvider($manager);
+        $manager->setProvider($provider);
+
+        return $manager;
     }
 }

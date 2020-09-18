@@ -3,6 +3,7 @@
 
 namespace App\Services\LoginProviders\ProviderManager;
 
+use App\Services\LoginProviders\LoginProvider;
 use App\User;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
@@ -13,6 +14,10 @@ class SocialiteManager implements ProviderManagerInterface
     private $driver;
 
     private $options;
+    /**
+     * @var LoginProvider
+     */
+    private $provider;
 
     public function setDriver(string $driver)
     {
@@ -44,10 +49,21 @@ class SocialiteManager implements ProviderManagerInterface
 
     private function transformToUser(SocialiteUser $socialiteUser)
     {
+        $name = !is_null($socialiteUser->name)
+            ? $socialiteUser->name
+            : $socialiteUser->email;
+
         return new User([
             'email' => $socialiteUser->email,
-            'name' => $socialiteUser->name,
+            'name' => $name,
             'password' => bcrypt(Str::random(16))
         ]);
+    }
+
+    public function setProvider(LoginProvider $provider)
+    {
+        $this->provider = $provider;
+
+        return $this;
     }
 }
