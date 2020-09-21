@@ -10,6 +10,4 @@ abstract class Creator
     abstract public function getProviderName(): string;
 
     abstract public function createLoginProvider(ProviderManagerInterface $manager);
-
-    abstract public function adapter(): ProviderAdapter;
 }

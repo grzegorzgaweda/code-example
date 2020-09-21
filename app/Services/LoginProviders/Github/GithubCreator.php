@@ -18,11 +18,6 @@ class GithubCreator extends Creator
         return new GithubProvider($manager);
     }
 
-    public function adapter(): ProviderAdapter
-    {
-        return new GithubAdapter();
-    }
-
     public function getProviderName(): string
     {
         return $this->providerName;
